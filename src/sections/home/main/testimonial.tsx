@@ -9,7 +9,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import XIcon from '@mui/icons-material/X';
@@ -20,10 +19,100 @@ import img_approach from '../../../assets/images/img_approach.svg';
 import img_footer_logo from '../../../assets/images/img_footer_logo.png';
 import { useI18nContext } from '../../../i18n/i18n-react';
 import useResponsive from '../../../hooks/useResponsive';
+import Slider from '../../../components/carousel';
 
 const Testimonial = () => {
   const { LL } = useI18nContext();
   const isDesktop = useResponsive('up', 'sm');
+
+  const carouselItems = [
+    {
+      icon: img_perspective,
+      title: 'Perspective',
+      text: `In envisioning a future, we see a financial landscape where everyone has the
+      tools to invest confidently. A world where financial freedom is not a luxury
+      but a universal reality, achieved through informed decisions and strategic
+      investments in finance 2.0`
+    },
+    {
+      icon: img_goal,
+      title: 'Goal',
+      text: `Our obsession is to empower individuals on their financial journey, providing
+      accessible solutions leveraging innovation and expertise. By fostering a
+      community committed to financial well-being, we aim to make the path to
+      economic empowerment accessible to all`
+    },
+    {
+      icon: img_approach,
+      title: 'Approach',
+      text: `Guided by excellence, our method blends technology with personalized insights.
+      We offer a quantitative automated investment solution and exclusive access to
+      our private club, ensuring each individuals financial strategy is uniquely
+      tailored to their aspirations`
+    },
+    {
+      icon: img_perspective,
+      title: 'Perspective',
+      text: `In envisioning a future, we see a financial landscape where everyone has the
+      tools to invest confidently. A world where financial freedom is not a luxury
+      but a universal reality, achieved through informed decisions and strategic
+      investments in finance 2.0`
+    },
+    {
+      icon: img_goal,
+      title: 'Goal',
+      text: `Our obsession is to empower individuals on their financial journey, providing
+      accessible solutions leveraging innovation and expertise. By fostering a
+      community committed to financial well-being, we aim to make the path to
+      economic empowerment accessible to all`
+    },
+    {
+      icon: img_approach,
+      title: 'Approach',
+      text: `Guided by excellence, our method blends technology with personalized insights.
+      We offer a quantitative automated investment solution and exclusive access to
+      our private club, ensuring each individuals financial strategy is uniquely
+      tailored to their aspirations`
+    }
+  ]
+
+  const carousel_settings = {
+    // dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    nextArrow: <></>,
+    prevArrow: <></>,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          autoplay: false,
+        }
+      }
+    ]
+  };
 
   return (
     <div>
@@ -90,88 +179,120 @@ const Testimonial = () => {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container item>
-              <Grid container spacing={2}>
-                <Grid item md={4}>
-                  <Stack
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#1c223c',
-                      spacing: 1,
-                      padding: '40px',
-                      border: '1px solid #777A8A',
-                      borderRadius: '15px',
-                    }}
-                  >
-                    <Box component="img" src={img_perspective} width="84px" />
-                    <Typography color="#fff" fontSize="32px">
-                      Perspective
-                    </Typography>
-                    <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
-                      In envisioning a future, we see a financial landscape where everyone has the
-                      tools to invest confidently. A world where financial freedom is not a luxury
-                      but a universal reality, achieved through informed decisions and strategic
-                      investments in finance 2.0
-                    </Typography>
-                  </Stack>
-                </Grid>
-                <Grid item md={4}>
-                  <Stack
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#1c223c',
-                      spacing: 1,
-                      padding: '40px',
-                      border: '1px solid #777A8A',
-                      borderRadius: '15px',
-                    }}
-                  >
-                    <Box component="img" src={img_goal} width="84px" />
-                    <Typography color="#fff" fontSize="32px">
-                      Goal
-                    </Typography>
-                    <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
-                      Our obsession is to empower individuals on their financial journey, providing
-                      accessible solutions leveraging innovation and expertise. By fostering a
-                      community committed to financial well-being, we aim to make the path to
-                      economic empowerment accessible to all
-                    </Typography>
-                  </Stack>
-                </Grid>
-                <Grid item md={4}>
-                  <Stack
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#1c223c',
-                      spacing: 1,
-                      padding: '40px',
-                      border: '1px solid #777A8A',
-                      borderRadius: '15px',
-                    }}
-                  >
-                    <Box component="img" src={img_approach} width="84px" />
-                    <Typography color="#fff" fontSize="32px">
-                      Approach
-                    </Typography>
-                    <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
-                      Guided by excellence, our method blends technology with personalized insights.
-                      We offer a quantitative automated investment solution and exclusive access to
-                      our private club, ensuring each individuals financial strategy is uniquely
-                      tailored to their aspirations
-                    </Typography>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </Grid>
           </Stack>
         </Grid>
-
+      </Stack>
+      <Grid width={{ md: '90%', xs: '90%' }} margin="auto">
+        <div  className='slider-container'>
+            {/* <Grid container spacing={2}> */}
+              <Slider {...carousel_settings}>
+                {
+                  carouselItems.map((item, index) => (
+                    // <Grid item md={4} key={index}>
+                      <Box
+                        key={index}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          backgroundColor: '#1c223c',
+                          spacing: 1,
+                          padding: '40px',
+                          border: '1px solid #777A8A',
+                          borderRadius: '15px',
+                        }}
+                      >
+                        <Box component="img" src={item.icon} width="84px" />
+                        <Typography color="#fff" fontSize="32px">
+                          {item.title}
+                        </Typography>
+                        <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
+                          {item.text}
+                        </Typography>
+                      </Box>
+                    // </Grid>
+                  ))
+                }
+              </Slider>
+              {/* <Grid item md={4}>
+                <Stack
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#1c223c',
+                    spacing: 1,
+                    padding: '40px',
+                    border: '1px solid #777A8A',
+                    borderRadius: '15px',
+                  }}
+                >
+                  <Box component="img" src={img_perspective} width="84px" />
+                  <Typography color="#fff" fontSize="32px">
+                    Perspective
+                  </Typography>
+                  <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
+                    In envisioning a future, we see a financial landscape where everyone has the
+                    tools to invest confidently. A world where financial freedom is not a luxury
+                    but a universal reality, achieved through informed decisions and strategic
+                    investments in finance 2.0
+                  </Typography>
+                </Stack>
+              </Grid>
+              <Grid item md={4}>
+                <Stack
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#1c223c',
+                    spacing: 1,
+                    padding: '40px',
+                    border: '1px solid #777A8A',
+                    borderRadius: '15px',
+                  }}
+                >
+                  <Box component="img" src={img_goal} width="84px" />
+                  <Typography color="#fff" fontSize="32px">
+                    Goal
+                  </Typography>
+                  <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
+                    Our obsession is to empower individuals on their financial journey, providing
+                    accessible solutions leveraging innovation and expertise. By fostering a
+                    community committed to financial well-being, we aim to make the path to
+                    economic empowerment accessible to all
+                  </Typography>
+                </Stack>
+              </Grid>
+              <Grid item md={4}>
+                <Stack
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#1c223c',
+                    spacing: 1,
+                    padding: '40px',
+                    border: '1px solid #777A8A',
+                    borderRadius: '15px',
+                  }}
+                >
+                  <Box component="img" src={img_approach} width="84px" />
+                  <Typography color="#fff" fontSize="32px">
+                    Approach
+                  </Typography>
+                  <Typography color="#a2a5b8" fontSize="18px" textAlign="center">
+                    Guided by excellence, our method blends technology with personalized insights.
+                    We offer a quantitative automated investment solution and exclusive access to
+                    our private club, ensuring each individuals financial strategy is uniquely
+                    tailored to their aspirations
+                  </Typography>
+                </Stack>
+              </Grid> */}
+            {/* </Grid> */}
+        </div>
+      </Grid>
+      <Stack spacing={4} width={{ md: '90%', xs: '90%' }} margin="auto" paddingY="80px">
         <Grid container>
           <Grid container>
             <Grid

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Grid, Stack, Typography, Button, FormControl, OutlinedInput } from '@mui/material';
 import { gsap } from 'gsap';
 import { useI18nContext } from '../../../i18n/i18n-react';
@@ -19,12 +19,17 @@ import img_group_1000003266 from '../../../assets/images/img_group_1000003266.sv
 import img_g886 from '../../../assets/images/img_g886.svg';
 import img_settings_blue_gray_600 from '../../../assets/images/img_settings_blue_gray_600.svg';
 
+
 const QuantInvest = () => {
   const { LL } = useI18nContext();
   const isDesktop = useResponsive('up', 'sm');
   const strategyTextsRef = useRef(null);
-  const slide2 = useRef(null);
-  const slide3 = useRef(null);
+
+  const slide1 = useRef<HTMLDivElement>(null);
+  const slide2 = useRef<HTMLDivElement>(null);
+  const slide3 = useRef<HTMLDivElement>(null);
+
+  const [cards, setCards] = useState<any>([true, false, false]);
 
   const strategyTexts = ['Simplified', 'Automated', 'Optimized', 'Transparent'];
   const strategyTextColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33EC'];
@@ -65,23 +70,60 @@ const QuantInvest = () => {
   useEffect(() => {
     animateText(strategyTexts, strategyCurrentIndex, strategyTextsRef, strategyTextColors);
   });
+
   const handleSlide = () => {
-    gsap.to(slide3.current, {
-      x: (window.innerWidth * 1.97) / 7,
-      duration: 1,
-      onComplete: () => {
-        gsap.to(slide2.current, {
-          x: (window.innerWidth * 1.97) / 7,
-          duration: 1,
-        });
-        gsap.to(slide3.current, {
-          x: (window.innerWidth * 3.98) / 7,
-          duration: 1,
-        });
-      },
-    });
+    if(window.innerWidth > 768) {
+      gsap.to(slide3.current, {
+        x: (window.innerWidth * 3.98) / 7,
+        duration: 1,
+        onComplete: () => {
+          gsap.to(slide2.current, {
+            x: (window.innerWidth * 1.97) / 7,
+            duration: 1,
+          });
+        },
+      });
+    }
   };
 
+  const leaveSlide = () => {
+    if(window.innerWidth > 768) {
+      gsap.to(slide2.current, {
+        x: (window.innerWidth * 0.05) / 6,
+        duration: 1,
+        onComplete: () => {
+          gsap.to(slide3.current, {
+            x: (window.innerWidth * 0.05) / 6,
+            duration: 1,
+          });
+        },
+      });
+    }
+  }
+
+  const showCardInMobile = (index: number) => {
+    console.log(index);
+    if(window.innerWidth > 760)  return;
+    let show_index: number = index + 1;
+    if(show_index % 3 === 0) {
+      show_index = 0;
+    } else if(show_index % 3 === 1) {
+      show_index = 1;
+    } else {
+      show_index = 2;
+    }
+    const _cards = JSON.parse(JSON.stringify(cards));
+    _cards.map((item:number, key: number) => {
+      if(key === show_index) {
+        _cards[key] = true;
+      } else {
+        _cards[key] = false;
+      }
+      return item;
+    })
+    
+    setCards(_cards);
+  }
   return (
     <Stack
       direction={isDesktop ? 'row' : 'column'}
@@ -225,7 +267,7 @@ const QuantInvest = () => {
                     <Typography color="lightgray" fontSize="16px">
                       Download our detailed report
                     </Typography>
-                    <FormControl sx={{ width: '25ch', backgroundColor: '#272f4c' }}>
+                    <FormControl sx={{ backgroundColor: '#272f4c' }}>
                       <OutlinedInput placeholder="Your Email Address" sx={{ color: '#a2a5b8' }} />
                     </FormControl>
                     <Button
@@ -449,6 +491,7 @@ const QuantInvest = () => {
                 backgroundColor: '#1C223C',
                 borderRadius: '16px',
                 paddingY: '40px',
+                paddingX: '20px'
               }}
             >
               <Grid container item display="flex" justifyContent="center">
@@ -456,111 +499,128 @@ const QuantInvest = () => {
                   Delegate Your Digital Asset Management Easily
                 </Typography>
               </Grid>
-              <Grid container>
-                <Grid container item>
-                  <Grid container spacing={4} padding="20px" position="relative">
-                    <Grid item md={4}>
-                      <Stack
-                        sx={{
-                          backgroundColor: '#272f4c',
-                          spacing: 2,
-                          borderRadius: '16px',
-                          paddingBottom: '40px',
-                          paddingLeft: '40px',
-                          paddingRight: '16px',
-                          paddingTop: '16px',
-                        }}
+              <Grid container onMouseEnter={handleSlide} onMouseLeave={leaveSlide}>
+                <Grid container spacing={4} padding='20px' position="relative">
+                  <Grid 
+                    item 
+                    md={4} 
+                    ref={slide1} 
+                    style={{display: cards[0] || window.innerWidth >= 768? 'block':'none'}} 
+                    onClick={() => {showCardInMobile(0)}}>
+                    <Stack
+                      sx={{
+                        backgroundColor: '#272f4c',
+                        spacing: 2,
+                        borderRadius: '16px',
+                        paddingBottom: '40px',
+                        paddingLeft: '40px',
+                        paddingRight: '16px',
+                        paddingTop: '16px',
+                      }}
+                    >
+                      <Typography
+                        fontSize="32px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        textAlign="right"
+                        color="#FBB532"
                       >
-                        <Typography
-                          fontSize="32px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          textAlign="right"
-                          color="#FBB532"
-                        >
-                          01
-                        </Typography>
-                        <Typography
-                          fontSize="24px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          color="#fff"
-                        >
-                          Sign Up
-                        </Typography>
-                        <Typography lineHeight="29px" color="#a2a5b8">
-                          Create your account & deposit USDT on your preferred centralized exchange
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item md={4} ref={slide2} position="absolute">
-                      <Stack
-                        sx={{
-                          backgroundColor: '#272f4c',
-                          spacing: 2,
-                          borderRadius: '16px',
-                          paddingBottom: '40px',
-                          paddingLeft: '40px',
-                          paddingRight: '16px',
-                          paddingTop: '16px',
-                        }}
+                        01
+                      </Typography>
+                      <Typography
+                        fontSize="24px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        color="#fff"
                       >
-                        <Typography
-                          fontSize="32px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          textAlign="right"
-                          color="#FBB532"
-                        >
-                          02
-                        </Typography>
-                        <Typography
-                          fontSize="24px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          color="#fff"
-                        >
-                          Connect Your CEX
-                        </Typography>
-                        <Typography lineHeight="29px" color="#a2a5b8">
-                          Link your exchange account to our automated strategy via secured API
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item md={4} ref={slide3} position="absolute" onMouseEnter={handleSlide}>
-                      <Stack
-                        sx={{
-                          backgroundColor: '#272f4c',
-                          spacing: 2,
-                          borderRadius: '16px',
-                          paddingBottom: '40px',
-                          paddingLeft: '40px',
-                          paddingRight: '16px',
-                          paddingTop: '16px',
-                        }}
+                        Sign Up
+                      </Typography>
+                      <Typography lineHeight="29px" color="#a2a5b8">
+                        Create your account & deposit USDT on your preferred centralized exchange
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid 
+                    item 
+                    md={4} 
+                    ref={slide2} 
+                    position={window.innerWidth > 768 ? 'absolute':'relative'} 
+                    style={{display: cards[1] || window.innerWidth >= 768? 'block':'none'}} 
+                    onClick={() => {showCardInMobile(1)}}
+                  >
+                    <Stack
+                      sx={{
+                        backgroundColor: '#272f4c',
+                        spacing: 2,
+                        borderRadius: '16px',
+                        paddingBottom: '40px',
+                        paddingLeft: '40px',
+                        paddingRight: '16px',
+                        paddingTop: '16px',
+                      }}
+                    >
+                      <Typography
+                        fontSize="32px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        textAlign="right"
+                        color="#FBB532"
                       >
-                        <Typography
-                          fontSize="32px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          textAlign="right"
-                          color="#FBB532"
-                        >
-                          03
-                        </Typography>
-                        <Typography
-                          fontSize="24px"
-                          fontWeight="700"
-                          letterSpacing="0.43px"
-                          color="#fff"
-                        >
-                          Start Investing
-                        </Typography>
-                        <Typography lineHeight="29px" color="#a2a5b8">
-                          Let our Quantitative algorithm make the best investment decisions for you!
-                        </Typography>
-                      </Stack>
-                    </Grid>
+                        02
+                      </Typography>
+                      <Typography
+                        fontSize="24px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        color="#fff"
+                      >
+                        Connect Your CEX
+                      </Typography>
+                      <Typography lineHeight="29px" color="#a2a5b8">
+                        Link your exchange account to our automated strategy via secured API
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid 
+                      item 
+                      md={4} 
+                      ref={slide3} 
+                      position={window.innerWidth > 768 ? 'absolute':'relative'} 
+                      style={{display: cards[2] || window.innerWidth >= 768? 'block':'none'}} 
+                      onClick={()=>{showCardInMobile(2)}}
+                    >
+                    <Stack
+                      sx={{
+                        backgroundColor: '#272f4c',
+                        spacing: 2,
+                        borderRadius: '16px',
+                        paddingBottom: '40px',
+                        paddingLeft: '40px',
+                        paddingRight: '16px',
+                        paddingTop: '16px',
+                      }}
+                    >
+                      <Typography
+                        fontSize="32px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        textAlign="right"
+                        color="#FBB532"
+                      >
+                        03
+                      </Typography>
+                      <Typography
+                        fontSize="24px"
+                        fontWeight="700"
+                        letterSpacing="0.43px"
+                        color="#fff"
+                      >
+                        Start Investing
+                      </Typography>
+                      <Typography lineHeight="29px" color="#a2a5b8">
+                        Let our Quantitative algorithm make the best investment decisions for you!
+                      </Typography>
+                    </Stack>
                   </Grid>
                 </Grid>
               </Grid>

@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@media (max-width: 768px) {
+  .slide-in {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .slide-out {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.5s, visibility 0.5s step-end;
+  }
+}

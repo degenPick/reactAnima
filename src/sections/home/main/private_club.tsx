@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, FormControl, Grid, OutlinedInput, Stack, Typography } from '@mui/material';
 import gsap from 'gsap';
 import { Flip } from 'gsap/Flip';
@@ -15,8 +15,12 @@ const PrivateClub = () => {
   const isDesktop = useResponsive('up', 'sm');
 
   const strategyTextsRef = useRef(null);
-  const slide2 = useRef(null);
-  const slide3 = useRef(null);
+
+  const slide1 = useRef<HTMLDivElement>(null);
+  const slide2 = useRef<HTMLDivElement>(null);
+  const slide3 = useRef<HTMLDivElement>(null);
+
+  const [cards, setCards] = useState<any>([true, false, false]);
 
   const strategyTexts = ['Diversity', 'Lean', 'Multiply', 'Prosper'];
   const strategyTextColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33EC'];
@@ -83,21 +87,70 @@ const PrivateClub = () => {
   });
 
   const handleSlide = () => {
-    gsap.to(slide3.current, {
-      x: (window.innerWidth * 1.97) / 7,
-      duration: 1,
-      onComplete: () => {
-        gsap.to(slide2.current, {
-          x: (window.innerWidth * 1.97) / 7,
-          duration: 1,
-        });
-        gsap.to(slide3.current, {
-          x: (window.innerWidth * 3.98) / 7,
-          duration: 1,
-        });
-      },
-    });
+    if(window.innerWidth <= 768) {
+      slide2.current?.classList.add('slide-in');
+      slide3.current?.classList.add('slide-in');
+      slide2.current?.classList.remove('slide-out');
+      slide3.current?.classList.remove('slide-out');
+    }
+    else {
+      gsap.to(slide3.current, {
+        x: (window.innerWidth * 3.98) / 7,
+        duration: 1,
+        onComplete: () => {
+          gsap.to(slide2.current, {
+            x: (window.innerWidth * 1.97) / 7,
+            duration: 1,
+          });
+        },
+      });
+    }
   };
+
+  const leaveSlide = () => {
+    if(window.innerWidth <= 768) {
+      slide2.current?.classList.add('slide-out');
+      slide3.current?.classList.add('slide-out');
+      slide2.current?.classList.remove('slide-in');
+      slide3.current?.classList.remove('slide-in');
+    }
+    else {
+      gsap.to(slide2.current, {
+        x: (window.innerWidth * 0.05) / 6,
+        duration: 1,
+        onComplete: () => {
+          gsap.to(slide3.current, {
+            x: (window.innerWidth * 0.05) / 6,
+            duration: 1,
+          });
+        },
+      });
+    }
+  }
+
+  const showCardInMobile = (index: number) => {
+    console.log(index);
+    if(window.innerWidth > 760)  return;
+    let show_index: number = index + 1;
+    if(show_index % 3 === 0) {
+      show_index = 0;
+    } else if(show_index % 3 === 1) {
+      show_index = 1;
+    } else {
+      show_index = 2;
+    }
+    const _cards = JSON.parse(JSON.stringify(cards));
+    _cards.map((item:number, key: number) => {
+      if(key === show_index) {
+        _cards[key] = true;
+      } else {
+        _cards[key] = false;
+      }
+      return item;
+    })
+    
+    setCards(_cards);
+  }
 
   return (
     <Stack
@@ -670,6 +723,7 @@ const PrivateClub = () => {
               spacing: 5,
               borderRadius: '16px',
               paddingY: '40px',
+              paddingX: '20px',
               backgroundColor: '#141a36',
             }}
           >
@@ -678,9 +732,15 @@ const PrivateClub = () => {
                 Easy Onboarding Path
               </Typography>
             </Grid>
-            <Grid container>
+            <Grid container onMouseEnter={handleSlide} onMouseLeave={leaveSlide}>
               <Grid container spacing={4} padding="20px" position="relative">
-                <Grid item md={4}>
+                <Grid 
+                  item 
+                  md={4} 
+                  ref={slide1} 
+                  style={{display: cards[0] || window.innerWidth >= 768 ? 'block':'none'}} 
+                  onClick={() => {showCardInMobile(0)}}
+                >
                   <Stack
                     sx={{
                       backgroundColor: '#272f4c',
@@ -714,7 +774,14 @@ const PrivateClub = () => {
                     </Typography>
                   </Stack>
                 </Grid>
-                <Grid item md={4} position="absolute" ref={slide2}>
+                <Grid 
+                  item 
+                  md={4}
+                  ref={slide2} 
+                  position={window.innerWidth > 768 ? 'absolute':'relative'}
+                  style={{display: cards[1] || window.innerWidth >= 768 ? 'block':'none'}} 
+                  onClick={() => {showCardInMobile(1)}}
+                >
                   <Stack
                     sx={{
                       backgroundColor: '#272f4c',
@@ -748,7 +815,14 @@ const PrivateClub = () => {
                     </Typography>
                   </Stack>
                 </Grid>
-                <Grid item md={4} position="absolute" ref={slide3} onMouseEnter={handleSlide}>
+                <Grid 
+                  item 
+                  md={4} 
+                  ref={slide3}
+                  position={window.innerWidth > 768 ? 'absolute':'relative'}
+                  style={{display: cards[2] || window.innerWidth >= 768 ? 'block':'none'}}
+                  onClick={()=>{showCardInMobile(2)}}
+                >
                   <Stack
                     sx={{
                       backgroundColor: '#272f4c',
